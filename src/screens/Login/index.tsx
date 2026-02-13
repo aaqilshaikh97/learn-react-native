@@ -5,30 +5,55 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { Formik } from 'formik';
 import { LoginValidation } from './LoginValidation';
-import { Alert } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
+const LoginScreen = () => {
+  const navigation = useNavigation<any>();
 
-export const LoginScreen = () => {
-  
+  const baseURL = 'https://legal-api.faimsoft.com/auth/sign-in/';
+
+  const handleLogin = async (values: { email: string; password: string }) => {
+    console.log('email', values.email);
+    console.log('password', values.password);
+    console.log('baseURL', baseURL);
+
+    try {
+      const response = await axios.post(baseURL, {
+        username: values.email,
+        password: values.password,
+      });
+
+      console.log('Login Success:', response.data);
+      const token = response.data.data.access;
+      const name = response.data.data.account?.first_name;
+
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userName', name);
+      navigation.replace('Home');
+      Alert.alert('Success', 'Login successful');
+    } catch (error: any) {
+      console.error('Login Error:', error);
+      console.log('FULL ERROR:', error.response?.data);
+
+      Alert.alert('Error', 'Something went wrong');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
-      <Text style={styles.subtitle}>Forms & Validation (Formik+ yup)</Text>
+      <Text style={styles.subtitle}>Forms & Validation (Formik + Yup)</Text>
 
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={LoginValidation}
-        onSubmit={values => {
-          console.log('Form Values:', values);
-
-          Alert.alert(
-            'Login ',
-            `Email: ${values.email}\nPassword: ${values.password}`,
-          );
-        }}
+        onSubmit={handleLogin}
       >
         {({
           handleChange,
@@ -47,6 +72,7 @@ export const LoginScreen = () => {
               value={values.email}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
+              autoCapitalize="none"
             />
             {touched.email && errors.email && (
               <Text style={styles.error}>{errors.email}</Text>
@@ -69,7 +95,7 @@ export const LoginScreen = () => {
             {/* Button */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleSubmit()}
+              onPress={handleSubmit as any}
             >
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
@@ -79,6 +105,8 @@ export const LoginScreen = () => {
     </View>
   );
 };
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -116,7 +144,7 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 8,
   },
-   subtitle: {
+  subtitle: {
     fontSize: 24,
     fontWeight: '400',
   },
