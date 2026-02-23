@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, View, StyleSheet, Alert, Text } from 'react-native';
+import { Button, View, StyleSheet, Alert, Text, } from 'react-native';
 import { style } from './style';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';

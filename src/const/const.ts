@@ -1,0 +1,1 @@
+export  const profile = 'https://legal-api.faimsoft.com/accounts/profile/'

@@ -1,7 +1,5 @@
-import React from 'react'
+import React from 'react';
 import { Text, FlatList, View, StyleSheet } from 'react-native';
-
-
 
 type User = {
   id: number;
@@ -35,8 +33,8 @@ export const DataCards = () => {
   return (
     <View>
       <Text>cards</Text>
-            <Text style={styles.cardHeading}>Cards</Text>
-       <FlatList
+      <Text style={styles.cardHeading}>Cards</Text>
+      <FlatList
         data={users}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
@@ -47,12 +45,11 @@ export const DataCards = () => {
         )}
       />
     </View>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
-      cardContainer: {
+  cardContainer: {
     flex: 1,
     flexDirection: 'row',
   },
@@ -113,14 +110,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
   },
-  userList:{
+  userList: {
     // backgroundColor:"yellow"
   },
-  userName:{
-    fontSize:15,
-    fontWeight:"bold",
+  userName: {
+    fontSize: 15,
+    fontWeight: 'bold',
   },
-  role:{
-    fontSize:14,
+  role: {
+    fontSize: 14,
   },
-})
+});
